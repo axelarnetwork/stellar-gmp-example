@@ -1,0 +1,23 @@
+[package]
+name = "axelar-gmp"
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+[lib]
+crate-type = ["cdylib"]
+doctest = false
+
+[dependencies]
+soroban-sdk = '22.0.0-rc.3'
+axelar-gateway = { git = "https://github.com/axelarnetwork/axelar-cgp-soroban", subdir = "contracts/axelar-gateway", features = [
+    'library',
+] }
+axelar-gas-service = { git = "https://github.com/axelarnetwork/axelar-cgp-soroban", subdir = "contracts/axelar-gas-service", features = [
+    'library',
+] }
+axelar-soroban-std = { git = "https://github.com/axelarnetwork/axelar-cgp-soroban", subdir = "packages/axelar-soroban-std" }
+
+
+[dev-dependencies]
+soroban-sdk = { version = '22.0.0-rc.3', features = ["testutils"] }
