@@ -7,3 +7,9 @@ mod storage_types;
 mod event;
 
 pub use contract::AxelarGMPClient;
+
+pub mod abi;
+pub mod types;
+
+// extern crate alloc;  // brings in the "alloc" crate, giving you Vec, String, etc.
+

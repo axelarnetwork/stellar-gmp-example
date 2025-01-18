@@ -9,7 +9,7 @@ crate-type = ["cdylib"]
 doctest = false
 
 [dependencies]
-soroban-sdk = '22.0.0-rc.3'
+soroban-sdk =  {version = '22.0.0-rc.3', features = ["alloc"]}
 axelar-gateway = { git = "https://github.com/axelarnetwork/axelar-cgp-soroban", subdir = "contracts/axelar-gateway", features = [
     'library',
 ] }
@@ -17,6 +17,8 @@ axelar-gas-service = { git = "https://github.com/axelarnetwork/axelar-cgp-soroba
     'library',
 ] }
 axelar-soroban-std = { git = "https://github.com/axelarnetwork/axelar-cgp-soroban", subdir = "packages/axelar-soroban-std" }
+alloy-primitives = "0.8.19"
+alloy-sol-types = "=0.7.6"
 
 
 [dev-dependencies]
