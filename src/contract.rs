@@ -5,7 +5,7 @@ use axelar_gateway::AxelarGatewayMessagingClient;
 use axelar_soroban_std::types::Token;
 use soroban_sdk::{contract, contractimpl, Address, Bytes, Env, String};
 
-use crate::abi::abi_encode;
+use crate::abi::{abi_decode_string, abi_encode};
 use axelar_gateway::executable::AxelarExecutableInterface;
 
 #[contract]
@@ -26,7 +26,14 @@ impl AxelarExecutableInterface for AxelarGMP {
     ) {
         let _ = Self::validate_message(&env, &source_chain, &message_id, &source_address, &payload);
 
-        event::executed(&env, source_chain, message_id, source_address, payload);
+        let decoded_msg = abi_decode_string(&env, payload);
+
+        //store msg
+        env.storage()
+            .instance()
+            .set(&DataKey::ReceivedMessage, &decoded_msg);
+
+        // event::executed(&env, source_chain, message_id, source_address, decoded_msg);
     }
 }
 
@@ -76,8 +83,11 @@ impl AxelarGMP {
             &encoded_msg,
         );
     }
+
+    pub fn received_message(env: Env) -> String {
+        env.storage()
+            .instance()
+            .get(&DataKey::ReceivedMessage)
+            .unwrap_or_else(|| String::from_str(&env, ""))
+    }
 }
-
-// stellar contract deploy --wasm target/wasm32-unknown-unknown/release/axelar_gmp.optimized.wasm --source benTwo --network testnet -- --gateway CBECMRORSIPG4XG4CNZILCH233OXYMLCY4GL3GIO4SURSHTKHDAPEOVM --gas_service CD3KZOLEACWMQSDEQFUJI6ZWC7A7CC7AE7ZFVE4X2DBPYAC6L663GCNN
-
-// stellar contract invoke --network testnet --id CDRTYHZ7HQTER4R5WOXWKS2QJYLLWM5GN4HIXTL3X2JDG3YHCCFG6OTA --source-account benTwo -- send --caller ben --destination_chain '"avalanche-fuji"' --message '"hello from stellar"' --destination_address '"0xEab7407d5E7F51D32a52A2d744f45ca79fc7d40D"' --gas_token '{ "address": "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC", "amount": "10000000000" }'

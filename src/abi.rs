@@ -16,6 +16,20 @@ pub fn abi_encode(env: &Env, message: String) -> Result<Bytes, AbiError> {
 
     Ok(Bytes::from_slice(&env, &encoded))
 }
+
+/// Decodes an ABI-encoded `Bytes` (as created by `abi_encode`) back into a Soroban `String`.
+pub fn abi_decode_string(env: &Env, encoded_bytes: Bytes) -> Result<String, AbiError> {
+    // Bytes to Vec<u8> for decoding.
+    let encoded_vec = encoded_bytes.to_alloc_vec();
+
+    //Decode data into Rust String.
+    let rust_string =
+        sol_data::String::abi_decode(&encoded_vec, true).map_err(|_| AbiError::InvalidUtf8)?;
+
+    // Rust String to Soroban String
+    Ok(String::from_str(env, &rust_string))
+}
+
 // soroban string to std string
 fn to_std_string(soroban_string: String) -> Result<StdString, AbiError> {
     let length = soroban_string.len() as usize;
