@@ -3,9 +3,7 @@ use crate::storage_types::DataKey;
 use axelar_gas_service::AxelarGasServiceClient;
 use axelar_gateway::AxelarGatewayMessagingClient;
 use axelar_soroban_std::types::Token;
-use soroban_sdk::{
-    contract, contractimpl, xdr::ToXdr, Address, Bytes, Env, IntoVal, String, Symbol,
-};
+use soroban_sdk::{contract, contractimpl, Address, Bytes, Env, String};
 
 use crate::abi::abi_encode;
 use axelar_gateway::executable::AxelarExecutableInterface;
@@ -59,32 +57,27 @@ impl AxelarGMP {
 
         caller.require_auth();
 
-        let encoded_msg = message.abi_encode();
+        let encoded_msg = abi_encode(&env, message).unwrap();
 
-        // type MySolType = FixedArray<Bool, 2>;
+        gas_service.pay_gas(
+            &env.current_contract_address(),
+            &destination_chain,
+            &destination_address,
+            &encoded_msg,
+            &caller,
+            &gas_token,
+            &Bytes::new(&env),
+        );
 
-        // let data = [true, false];
-        // let encoded: Vec<u8> = data.abi_encode();
-
-        // gas_service.pay_gas(
-        //     &env.current_contract_address(),
-        //     &destination_chain,
-        //     &destination_address,
-        //     &message,
-        //     &caller,
-        //     &gas_token,
-        //     &Bytes::new(&env),
-        // );
-
-        // gateway.call_contract(
-        //     &env.current_contract_address(),
-        //     &destination_chain,
-        //     &destination_address,
-        //     &message,
-        // );
+        gateway.call_contract(
+            &env.current_contract_address(),
+            &destination_chain,
+            &destination_address,
+            &encoded_msg,
+        );
     }
 }
 
 // stellar contract deploy --wasm target/wasm32-unknown-unknown/release/axelar_gmp.optimized.wasm --source benTwo --network testnet -- --gateway CBECMRORSIPG4XG4CNZILCH233OXYMLCY4GL3GIO4SURSHTKHDAPEOVM --gas_service CD3KZOLEACWMQSDEQFUJI6ZWC7A7CC7AE7ZFVE4X2DBPYAC6L663GCNN
 
-// stellar contract invoke --network testnet --id CC4FFSSIV3XPQ55TVJ3LG2RCRWLDEVJ4IQJSQVUPAW7YFXYQCA3TSJLD --source-account benTwo -- send --caller ben --destination_chain '"avalanche-fuji"' --message '[18, 52]' --destination_address '"0x447dDEbfe05393c4Ff7c6e590B4491c6260e597D"' --gas_token '{ "address": "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC", "amount": "10000000000" }'
+// stellar contract invoke --network testnet --id CDRTYHZ7HQTER4R5WOXWKS2QJYLLWM5GN4HIXTL3X2JDG3YHCCFG6OTA --source-account benTwo -- send --caller ben --destination_chain '"avalanche-fuji"' --message '"hello from stellar"' --destination_address '"0xEab7407d5E7F51D32a52A2d744f45ca79fc7d40D"' --gas_token '{ "address": "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC", "amount": "10000000000" }'

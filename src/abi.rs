@@ -1,18 +1,26 @@
-use alloy_sol_types::{sol, SolType};
-use soroban_sdk::{Bytes, Env, Error, String};
+use crate::abi::alloc::{string::String as StdString, vec};
+use alloy_sol_types::{sol_data, SolType};
+use soroban_sdk::{contracterror, Bytes, Env, String};
 
 extern crate alloc;
 
-// Define a Solidity-compatible `bytes` type
-//type SolidityBytes = sol!(bytes);
-sol!(bytes EncodedMessage);
+#[contracterror]
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+pub enum AbiError {
+    InvalidUtf8 = 1,
+}
 
-impl Message {
-    pub fn abi_encode(self, env: &Env) -> Result<Bytes, Error> {
-        // ABI encode the byte slice
-        let encoded = EncodedMessage.abi_encode();
+pub fn abi_encode(env: &Env, message: String) -> Result<Bytes, AbiError> {
+    let message = to_std_string(message)?;
+    let encoded = sol_data::String::abi_encode(&message);
 
-        // Return as Soroban's `Bytes` type
-        Ok(Bytes::from_slice(env, &encoded))
-    }
+    Ok(Bytes::from_slice(&env, &encoded))
+}
+// soroban string to std string
+fn to_std_string(soroban_string: String) -> Result<StdString, AbiError> {
+    let length = soroban_string.len() as usize;
+    let mut bytes = vec![0u8; length];
+
+    soroban_string.copy_into_slice(&mut bytes);
+    StdString::from_utf8(bytes).map_err(|_| AbiError::InvalidUtf8)
 }

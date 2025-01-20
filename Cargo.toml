@@ -23,3 +23,9 @@ alloy-sol-types = "=0.7.6"
 
 [dev-dependencies]
 soroban-sdk = { version = '22.0.0-rc.3', features = ["testutils"] }
+
+
+[profile.release-with-logs]
+inherits = "release"
+debug-assertions = true
+
