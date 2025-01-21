@@ -1,6 +1,6 @@
 # Stellar-gmp
 
-This repo is a standalone Axelar GMP example for sending a GMP message from/to the Stellar blockhain
+This repo is a standalone Axelar GMP example for sending a GMP message from/to the Stellar blockchain
 
 ## Setup
 
