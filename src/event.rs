@@ -1,11 +1,11 @@
-use soroban_sdk::{Bytes, Env, String, Symbol};
+use soroban_sdk::{ Env, String, Symbol};
 
 pub fn executed(
     env: &Env,
     source_chain: String,
     message_id: String,
     source_address: String,
-    payload: Bytes,
+    payload: String,
 ) {
     let topics = (
         Symbol::new(env, "executed"),

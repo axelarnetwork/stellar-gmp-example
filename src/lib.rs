@@ -10,7 +10,5 @@ pub use contract::AxelarGMPClient;
 
 pub mod abi;
 
-// extern crate alloc;  // brings in the "alloc" crate, giving you Vec, String, etc.
-
 
 

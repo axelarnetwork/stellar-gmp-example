@@ -1,18 +1,31 @@
 use crate::event;
 use crate::storage_types::DataKey;
-use axelar_gas_service::AxelarGasServiceClient;
-use axelar_gateway::AxelarGatewayMessagingClient;
-use axelar_soroban_std::types::Token;
-use soroban_sdk::{contract, contractimpl, Address, Bytes, Env, String};
+use soroban_sdk::{contract, contracterror, contractimpl, Address, Bytes, Env, String};
+use stellar_axelar_gas_service::AxelarGasServiceClient;
+use stellar_axelar_gateway::AxelarGatewayMessagingClient;
+use stellar_axelar_std::types::Token;
 
 use crate::abi::{abi_decode_string, abi_encode};
-use axelar_gateway::executable::AxelarExecutableInterface;
+use stellar_axelar_gateway::executable::{AxelarExecutableInterface, NotApprovedError};
+use stellar_axelar_gateway::impl_not_approved_error;
 
 #[contract]
 pub struct AxelarGMP;
 
+#[contracterror]
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
+#[repr(u32)]
+pub enum CustomErrors {
+    NotApproved = 1,
+    FailedDecoding = 2,
+}
+
+impl_not_approved_error!(CustomErrors);
+
 #[contractimpl]
 impl AxelarExecutableInterface for AxelarGMP {
+    type Error = CustomErrors;
+
     fn gateway(env: &Env) -> Address {
         env.storage().instance().get(&DataKey::Gateway).unwrap()
     }
@@ -23,17 +36,20 @@ impl AxelarExecutableInterface for AxelarGMP {
         message_id: String,
         source_address: String,
         payload: Bytes,
-    ) {
-        let _ = Self::validate_message(&env, &source_chain, &message_id, &source_address, &payload);
+    ) -> Result<(), CustomErrors> {
+        let _ =
+            Self::validate_message(&env, &source_chain, &message_id, &source_address, &payload)?;
 
-        let decoded_msg = abi_decode_string(&env, payload);
+        let decoded_msg = abi_decode_string(&env, payload).map_err(|_| CustomErrors::FailedDecoding)?;
 
         //store msg
         env.storage()
             .instance()
             .set(&DataKey::ReceivedMessage, &decoded_msg);
 
-        // event::executed(&env, source_chain, message_id, source_address, decoded_msg);
+        event::executed(&env, source_chain, message_id, source_address, decoded_msg);
+
+        Ok(())
     }
 }
 
