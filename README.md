@@ -6,6 +6,8 @@ This repo is a standalone Axelar GMP example for sending a GMP message from/to t
 
 Run `stellar contract build` to compile contract
 
+Run `stellar contract optimize --wasm target/wasm32-unknown-unknown/release/axelar_gmp.wasm` to optimize the contract
+
 ## Deploy
 
 Run `stellar contract deploy --wasm target/wasm32-unknown-unknown/release/axelar_gmp.optimized.wasm --source benTwo --network testnet -- --gateway CBECMRORSIPG4XG4CNZILCH233OXYMLCY4GL3GIO4SURSHTKHDAPEOVM --gas_service CD3KZOLEACWMQSDEQFUJI6ZWC7A7CC7AE7ZFVE4X2DBPYAC6L663GCNN` to deploy on testnet
