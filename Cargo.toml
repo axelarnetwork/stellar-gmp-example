@@ -10,13 +10,13 @@ doctest = false
 
 [dependencies]
 soroban-sdk =  {version = '22.0.0-rc.3', features = ["alloc"]}
-stellar-axelar-gateway = { git = "https://github.com/axelarnetwork/axelar-cgp-stellar", subdir = "contracts/stellar-axelar-gateway", features = [
+stellar-axelar-gateway = { git = "https://github.com/axelarnetwork/axelar-amplifier-stellar", subdir = "contracts/stellar-axelar-gateway", features = [
     'library',
 ] }
-stellar-axelar-gas-service = { git = "https://github.com/axelarnetwork/axelar-cgp-stellar", subdir = "contracts/stellar-axelar-gas-service", features = [
+stellar-axelar-gas-service = { git = "https://github.com/axelarnetwork/axelar-amplifier-stellar", subdir = "contracts/stellar-axelar-gas-service", features = [
     'library',
 ] }
-stellar-axelar-std = { git = "https://github.com/axelarnetwork/axelar-cgp-stellar", subdir = "packages/stellar-axelar-std" }
+stellar-axelar-std = { git = "https://github.com/axelarnetwork/axelar-amplifier-stellar", subdir = "packages/stellar-axelar-std" }
 alloy-sol-types = "=0.7.6"
 
 
