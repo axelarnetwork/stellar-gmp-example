@@ -1,14 +1,9 @@
 #![no_std]
 
-pub mod contract;
-
-mod storage_types;
-
-mod event;
-
-pub use contract::AxelarGMPClient;
-
+mod contract;
+pub mod event;
+pub mod interface;
+mod storage;
 pub mod abi;
 
-
-
+pub use contract::{AxelarGMP, AxelarGMPClient};

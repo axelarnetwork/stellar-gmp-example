@@ -1,18 +1,10 @@
-use soroban_sdk::{ Env, String, Symbol};
+use stellar_axelar_std::{Bytes, IntoEvent, String};
 
-pub fn executed(
-    env: &Env,
-    source_chain: String,
-    message_id: String,
-    source_address: String,
-    payload: String,
-) {
-    let topics = (
-        Symbol::new(env, "executed"),
-        source_chain,
-        message_id,
-        source_address,
-    );
-
-    env.events().publish(topics, (payload,));
+#[derive(Debug, PartialEq, Eq, IntoEvent)]
+pub struct ExecutedEvent {
+    pub source_chain: String,
+    pub message_id: String,
+    pub source_address: String,
+    #[data]
+    pub payload: Bytes,
 }
