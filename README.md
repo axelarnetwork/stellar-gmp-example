@@ -119,7 +119,7 @@ After sending a message, you can track its progress across chains using the [Axe
 1. Copy the transaction hash from the output of your send command
 2. Visit https://testnet.axelarscan.io/gmp/YOUR_TRANSACTION_HASH
 
-For example, you can see a successful transaction here: [https://testnet.axelarscan.io/gmp/a465efc33ed0b7848236bd8d75ba8e21d0d9c1fe1ef5a0d8b3112efa5f109828](https://testnet.axelarscan.io/gmp/a465efc33ed0b7848236bd8d75ba8e21d0d9c1fe1ef5a0d8b3112efa5f109828)
+For example, you can see a successful transaction here: [https://testnet.axelarscan.io/gmp/f05a2850aa49cb7172ac505e7c957a343ef8a21b2f151c9c936f3e8587b0cfa9](https://testnet.axelarscan.io/gmp/f05a2850aa49cb7172ac505e7c957a343ef8a21b2f151c9c936f3e8587b0cfa9)
 
 ## Supported Chains
 
